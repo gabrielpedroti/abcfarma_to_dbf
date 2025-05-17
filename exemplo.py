@@ -2,7 +2,7 @@ import requests
 import dbf
 import json
 
-# Função para buscar dados da ABCFarma
+# Buscando dados da URL com exemplo da ABCFarma
 def buscar_dados_abcfarma():
     url = 'https://webserviceabcfarma.org.br/webservice/exemplo/2025'
     response = requests.get(url)
@@ -11,7 +11,7 @@ def buscar_dados_abcfarma():
     else:
         raise Exception(f'Erro ao buscar dados: {response.status_code}')
 
-# Função para processar os dados e fazer o mapeamento correto
+# Processando os dados e mapeando os campos
 def processar_dados(dados_json):
     produtos = []
     for item in dados_json['data']:
@@ -24,17 +24,17 @@ def processar_dados(dados_json):
         })
     return produtos
 
-# Função para criar e salvar o DBF
+# Criar e salvar o DBF
 def salvar_em_dbf(produtos, caminho_arquivo):
     table = dbf.Table(caminho_arquivo, 
-        'EAN C(20); PRODUTO C(100); APRESENTA C(100); PF N(10,2); PMC N(10,2)')
+        'EAN C(20); PRODUTO C(100); APRESEN C(100); PF N(10,2); PMC N(10,2)')
     table.open(mode=dbf.READ_WRITE)
 
     for produto in produtos:
         table.append((
             produto['EAN'],
             produto['PRODUTO'],
-            produto['APRESENTACAO'],  # Pode manter assim, o valor é o mesmo, só o campo que foi renomeado
+            produto['APRESENTACAO'],
             float(produto['PF']) if produto['PF'] else 0.0,
             float(produto['PMC']) if produto['PMC'] else 0.0
         ))
@@ -45,5 +45,5 @@ def salvar_em_dbf(produtos, caminho_arquivo):
 if __name__ == "__main__":
     dados_json = buscar_dados_abcfarma()
     produtos = processar_dados(dados_json)
-    salvar_em_dbf(produtos, 'precos_abcfarma.dbf')  # <<< AQUI FOI CORRIGIDO
+    salvar_em_dbf(produtos, 'precos_abcfarma.dbf')
     print('Arquivo DBF gerado com sucesso!')
