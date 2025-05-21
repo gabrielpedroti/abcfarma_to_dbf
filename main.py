@@ -6,6 +6,7 @@ from datetime import datetime
 CNPJ_ASSOCIADO = '00000000000000'
 SENHA_ASSOCIADO = 'sua_senha_aqui'
 CNPJ_SOFTWARE = '00000000000000'
+INCLUIR_PMC_ZERADO = False  # ✅ Se False, ignora produtos com PMC_18 = 0.00
 
 # --- ENDPOINTS DA API ABCFARMA ---
 URL_DADOS = 'https://webserviceabcfarma.org.br/webservice/'
@@ -68,7 +69,14 @@ def buscar_pagina_abcfarma(pagina):
 # --- PROCESSA JSON EM LISTA DE PRODUTOS ---
 def processar_dados(dados_json):
     produtos = []
-    for item in dados_json.get('data', []):
+    todos = dados_json.get('data', [])
+    for item in todos:
+        pmc_valor = item.get('PMC_18', '')
+        pmc_valor_float = float(pmc_valor) if pmc_valor else 0.0
+
+        if not INCLUIR_PMC_ZERADO and pmc_valor_float == 0.0:
+            continue
+
         produtos.append({
             'EAN': item.get('EAN', ''),
             'PRODUTO': item.get('NOME', ''),
@@ -76,7 +84,8 @@ def processar_dados(dados_json):
             'PF': item.get('PF_18', ''),
             'PMC': item.get('PMC_18', '')
         })
-    return produtos
+
+    return produtos, len(todos)
 
 # --- CRIA E SALVA O ARQUIVO DBF ---
 def salvar_em_dbf(produtos, caminho_arquivo):
@@ -103,6 +112,8 @@ if __name__ == "__main__":
 
     pagina = 1
     todos_produtos = []
+    total_produtos_recebidos = 0
+    total_com_pmc_valido = 0
 
     print("\n📦 Iniciando coleta dos dados...")
     while True:
@@ -111,11 +122,13 @@ if __name__ == "__main__":
             print("❌ Falha ao obter os dados. Verifique o log.")
             break
 
-        produtos = processar_dados(dados_json)
-        todos_produtos.extend(produtos)
+        produtos_filtrados, total_na_pagina = processar_dados(dados_json)
+        todos_produtos.extend(produtos_filtrados)
 
-        print(f"✅ Página {pagina} processada com {len(produtos)} itens.")
+        total_produtos_recebidos += total_na_pagina
+        total_com_pmc_valido += len(produtos_filtrados)
 
+        print(f"✅ Página {pagina} processada com {len(produtos_filtrados)} itens.")
         if pagina >= int(dados_json.get('total_paginas', 1)):
             break
         pagina += 1
@@ -127,7 +140,16 @@ if __name__ == "__main__":
         mensagem_sucesso = f"[SUCESSO] Arquivo gerado: {nome_arquivo}\nProdutos salvos: {len(todos_produtos)}"
         salvar_log(mensagem_sucesso)
 
+        resumo = f"""
+[RESUMO]
+Total recebido da ABCFarma: {total_produtos_recebidos}
+Total com PMC > 0: {total_com_pmc_valido}
+Filtro PMC zerado ativado? {'NÃO' if INCLUIR_PMC_ZERADO else 'SIM'}
+"""
+        salvar_log(resumo)
         print(f"\n🎉 {mensagem_sucesso}")
+        print(resumo)
+
     else:
         salvar_log("[ERRO] Nenhum produto foi salvo.")
         print("\n❌ Nenhum dado foi processado. Verifique o log.")
