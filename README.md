@@ -5,6 +5,8 @@
 
 🎯 <strong>Meu objetivo:</strong> Aprender mais sobre manipulação de dados, integração com sistemas legados e automação de processos, enquanto contribuo para facilitar o dia a dia das farmácias.
 
+##
+
 </p> <h3 align="left">Como funciona?</h3> <p align="left"> O script acessa os dados da ABCFARMA, faz o processamento necessário e gera arquivos no formato DBF, prontos para serem importados pelos sistemas das farmácias. </p>
 
 ##
