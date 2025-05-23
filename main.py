@@ -2,6 +2,8 @@ from services.api import buscar_data_atualizacao, buscar_pagina_abcfarma
 from services.dbf_service import salvar_em_dbf
 from utils.processor import processar_dados
 from utils.logger import salvar_log
+from config import INCLUIR_PMC_ZERADO
+from datetime import datetime
 
 print("🔍 Buscando data de atualização da ABCFarma...")
 data_formatada = buscar_data_atualizacao()
@@ -33,7 +35,10 @@ while True:
     pagina += 1
 
 if todos_produtos:
-    nome_arquivo = f"atualizacao_precos_abcfarma_{data_formatada}.dbf"
+    # Nome do arquivo: PRECO_ddmmaa.dbf
+    data_compacta = datetime.now().strftime('%d%m%y')  # Exemplo: '190525'
+    nome_arquivo = f"PRECO_{data_compacta}.dbf"
+
     salvar_em_dbf(todos_produtos, nome_arquivo)
 
     mensagem_sucesso = f"[SUCESSO] Arquivo gerado: {nome_arquivo}\nProdutos salvos: {len(todos_produtos)}"
@@ -48,6 +53,7 @@ Filtro PMC zerado ativado? {'NÃO' if not INCLUIR_PMC_ZERADO else 'SIM'}
     salvar_log(resumo)
     print(f"\n🎉 {mensagem_sucesso}")
     print(resumo)
+
 else:
     salvar_log("[ERRO] Nenhum produto foi salvo.")
     print("\n❌ Nenhum dado foi processado. Verifique o log.")
