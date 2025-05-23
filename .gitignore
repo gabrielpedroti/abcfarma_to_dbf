@@ -1,4 +1,5 @@
 log_execucao.txt
 precos_abcfarma.dbf
-__pycache__
-services/__pycache__/api.cpython-313.pyc
+__pycache__/
+PRECO_230525.dbf
+config.py
