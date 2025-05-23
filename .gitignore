@@ -1,4 +1,4 @@
-log_execucao.txt
+logs/
 precos_abcfarma.dbf
 __pycache__/
 PRECO_230525.dbf
