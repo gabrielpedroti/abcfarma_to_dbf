@@ -2,4 +2,4 @@ log_execucao.txt
 precos_abcfarma.dbf
 __pycache__/
 PRECO_230525.dbf
-config.py
+.env

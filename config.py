@@ -1,7 +1,12 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 # --- CONFIGURAÇÕES DO USUÁRIO ---
-CNPJ_ASSOCIADO = '00000000000000'
-SENHA_ASSOCIADO = 'sua_senha_aqui'
-CNPJ_SOFTWARE = '00000000000000'
+CNPJ_ASSOCIADO = os.getenv('CNPJ_ASSOCIADO')
+SENHA_ASSOCIADO = os.getenv('SENHA_ASSOCIADO')
+CNPJ_SOFTWARE = os.getenv('CNPJ_SOFTWARE')
 INCLUIR_PMC_ZERADO = True
 
 # --- ENDPOINTS DA API ABCFARMA ---
