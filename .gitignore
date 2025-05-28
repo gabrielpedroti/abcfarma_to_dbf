@@ -1,4 +1,6 @@
 logs/
 __pycache__/
-.dbf
+/dist
+/build
 .env
+Gerador_Precos.spec
