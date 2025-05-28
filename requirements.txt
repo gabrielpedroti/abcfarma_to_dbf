@@ -1,3 +1,4 @@
 requests
 dbf
 python-dotenv
+pyinstaller
