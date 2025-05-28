@@ -48,7 +48,7 @@ if todos_produtos:
 [RESUMO]
 Total recebido da ABCFarma: {total_produtos_recebidos}
 Total com PMC > 0: {total_com_pmc_valido}
-Filtro PMC zerado ativado? {'NÃO' if not INCLUIR_PMC_ZERADO else 'SIM'}
+Produtos com PMC zerado salvos? {'NÃO' if not INCLUIR_PMC_ZERADO else 'SIM'}
 """
     salvar_log(resumo)
     print(f"\n🎉 {mensagem_sucesso}")

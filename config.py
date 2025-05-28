@@ -7,7 +7,7 @@ load_dotenv()
 CNPJ_ASSOCIADO = os.getenv('CNPJ_ASSOCIADO')
 SENHA_ASSOCIADO = os.getenv('SENHA_ASSOCIADO')
 CNPJ_SOFTWARE = os.getenv('CNPJ_SOFTWARE')
-INCLUIR_PMC_ZERADO = True
+INCLUIR_PMC_ZERADO = False
 
 # --- ENDPOINTS DA API ABCFARMA ---
 URL_DADOS = 'https://webserviceabcfarma.org.br/webservice/'
